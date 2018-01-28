@@ -11,6 +11,7 @@ Below you'll find information about performing common tasks. The most recent ver
   * [npm run ios](#npm-run-ios)
   * [npm run android](#npm-run-android)
   * [npm run eject](#npm-run-eject)
+  * [npm debug](#npm debug)
 * [Writing and Running Tests](#writing-and-running-tests)
 * [Environment Variables](#environment-variables)
   * [Configuring Packager IP Address](#configuring-packager-ip-address)
@@ -85,6 +86,12 @@ Like `npm start`, but also attempts to open your app on a connected Android devi
 This will start the process of "ejecting" from Create React Native App's build scripts. You'll be asked a couple of questions about how you'd like to build your project.
 
 **Warning:** Running eject is a permanent action (aside from whatever version control system you use). An ejected app will require you to have an [Xcode and/or Android Studio environment](https://facebook.github.io/react-native/docs/getting-started.html) set up.
+
+### `npm debug`
+
+If you want to run debug, you must star the app using yarn debug then after the build is done, you must open React Native Debugger(if you are in windows)
+
+[![React Native Debugger](https://snag.gy/qbBSKY.jpg "React Native Debugger")](https://snag.gy/qbBSKY.jpg "React Native Debugger")
 
 ## Customizing App Display Name and Icon
 
@@ -271,9 +278,9 @@ If we want to debug React-Redux :
 Install react native tools : `npm install -g react-devtools`
 
 ```
-Current port :`19000` 
+Current port :`8085` 
 
-set REACT_DEBUGGER="rndebugger-open --open --port 19001" && yarn start
+set REACT_DEBUGGER="rndebugger-open --open --port 8081" && yarn start
 
 Ref to [React-Redux Dev Tools](https://streetsmartdev.com/debugging-react-native-expo-using-react-native-debugger/)
 
