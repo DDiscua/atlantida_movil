@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 //import {login_background_1} from '../../assets/img/login_background_1.png';
 
-
 const login_style = StyleSheet.create({
 
     backgroundImage: {

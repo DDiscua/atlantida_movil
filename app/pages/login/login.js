@@ -8,6 +8,7 @@ import BackgroundImage from '../../components/BackgroundImage/BackgroundImage';
 import login_style from './login_style';
 import login_bg from '../../assets/img/login/login_background_1.png';
 import login_logo from '../../assets/img/login/bancatlan_logos/bancatlan_logo_white.png';
+import i18n from './i18n/i18n';
 //const login_bg = require("../../assets/img/login/login_background_1.png");
 
 class Login extends Component {
@@ -29,7 +30,18 @@ class Login extends Component {
     e.preventDefault();
   }
 
+  getCurrentYear(){
+    return new Date().getFullYear().toString();
+  }
 
+  changeLocale(){
+    if (i18n.currentLocale() === 'en-US'){
+      i18n.locale = 'es-HN';
+    }else{
+      i18n.locale = 'en-US';
+    }
+    this.forceUpdate();
+  }
 
   render() {
     console.log('image', login_bg);
@@ -46,21 +58,28 @@ class Login extends Component {
           <Form style={login_style.form}>
             <Item error>
               <Icon active name='person' style={{ color: '#fff' }} />
-              <Input placeholder='Usuario' />
+              <Input placeholder={i18n.t('user')}/>
             </Item>
             <Item error last>
               <Icon active name='eye' style={{ color: '#fff' }} />
-              <Input placeholder="Contraseña" />
+              <Input placeholder={i18n.t('password')} />
             </Item>
             <Button light style={login_style.button}
               onPress={(e) => this.userLogin(e)} title={this.state.route}
             >
-              <Text style={{ color: '#fff', fontWeight: 'bold' }}>Entrar</Text>
+              <Text style={{ color: '#fff', fontWeight: 'bold' }}>{i18n.t('login')}</Text>
             </Button>
+
+            <Button light style={login_style.button}
+              onPress={(e) => this.changeLocale(e)} title={this.state.route}
+            >
+              <Text style={{ color: '#fff', fontWeight: 'bold' }}>Dummy Change Locale</Text>
+            </Button>
+
           </Form>
         </Content>
         <Footer style={login_style.footer}>
-          <Text style={{ color: '#fff' }}>© 2017 Banco Atlátida S.A.</Text>
+          <Text style={{ color: '#fff' }}>© {this.getCurrentYear()} Banco Atlátida S.A.</Text>
         </Footer>
       </ImageBackground >
 
