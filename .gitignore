@@ -11,6 +11,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
+.bash_profile
+
+/android
+/ios
 
 npm-debug.log*
 yarn-debug.log*

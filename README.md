@@ -26,6 +26,10 @@ Below you'll find information about performing common tasks. The most recent ver
   * [Networking](#networking)
   * [iOS Simulator won't open](#ios-simulator-wont-open)
   * [QR Code does not scan](#qr-code-does-not-scan)
+* [Scripts Utilities](#Scripts Utilities)
+	* [Installing react-native-debugger](#Installing react-native-debugger)
+	* [Linking react native with expo and react-native-debugger](#Linking react native with expo and react-native-debugger)
+* [MD Editor](#MD Editor)	
 
 ## Updating to New Releases
 
@@ -218,3 +222,66 @@ There are a few steps you may want to take to troubleshoot these kinds of errors
 If you're not able to scan the QR code, make sure your phone's camera is focusing correctly, and also make sure that the contrast on the two colors in your terminal is high enough. For example, WebStorm's default themes may [not have enough contrast](https://github.com/react-community/create-react-native-app/issues/49) for terminal QR codes to be scannable with the system barcode scanners that the Expo app uses.
 
 If this causes problems for you, you may want to try changing your terminal's color theme to have more contrast, or running Create React Native App from a different terminal. You can also manually enter the URL printed by the packager script in the Expo app's search bar to load it manually.
+
+
+#Scripts Utilities
+
+So, we want to know how to debbug React-Native APP so follow the next tips:
+
+##Installing react-native-debugger
+You can find the compiled binaries of react-native-debugger at 
+
+[Realses React Native Debugger](https://github.com/jhen0409/react-native-debugger/releases "Realses React Native Debugger")
+
+##Linking react native with expo and react-native-debugger
+
+To link react native running expo with react-native-debugger, we would need an additional package in our react-native project called react [React Native Debugger](https://www.npmjs.com/package/react-native-debugger-open "React Native Debugger").
+
+```
+Install react native tools : `yarn add --dev react-native-debugger-open`
+
+```
+
+
+
+Next is to update the port where react-native-debugger is listening.
+
+This can be achieved by adding a script into your react-native projects’ package.json.
+
+Simply add the following:
+
+```
+"scripts": {
+  "postinstall": "rndebugger-open --expo"
+} 
+```
+After adding the scripts, run it by issuing:
+
+`yarn run postinstall`
+
+If everything smooth, you would see a text saying:
+
+Replace `open debugger-ui with Chrome` to `open React Native Debugger`.
+
+Ref to : [React Dev Tools]( https://facebook.github.io/react-native/docs/debugging.html "React Dev Tools")
+
+If we want to debug React-Redux :
+
+```
+Install react native tools : `npm install -g react-devtools`
+
+```
+Current port :`19000` 
+
+set REACT_DEBUGGER="rndebugger-open --open --port 19001" && yarn start
+
+Ref to [React-Redux Dev Tools](https://streetsmartdev.com/debugging-react-native-expo-using-react-native-debugger/)
+
+So if everything it's correcto go to : localhost:190001/debugger-ui or  react-native-debugger
+#MD Editor
+
+If you want to keep this beatiful format(MarkDown), you can use your own editor and  try to remember all Markdown syntax or you can use a free md editor `online` or `standalone`.
+
+You can also search an extension for you favorite code editor, the meaning is to avoid scrub up  this beautiful documentation.
+ 
+Ref to :  [MD EDITOR](http://pandao.github.io/editor.md/en.html)
