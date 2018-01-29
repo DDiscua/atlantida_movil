@@ -3,10 +3,8 @@ import { connect } from 'react-redux';
 import { View, Image, ImageBackground } from "react-native";
 import { Content, Form, Item, Input, Icon, Button, Text, Footer, Header, Fab } from 'native-base';
 import SVGImage from 'react-native-svg-image';
-import { login } from '../../actions/auth';
-
+import { secretImage,login } from '../../actions/auth';
 import { i18n, changeLocale, expandTranslations } from '../../actions/i18n';
-
 import BackgroundImage from '../../components/BackgroundImage/BackgroundImage';
 import login_style from './login_style';
 import login_bg from '../../assets/img/login/login_background_1.png';
@@ -14,10 +12,6 @@ import login_logo from '../../assets/img/login/bancatlan_logos/bancatlan_logo_wh
 //const login_bg = require("../../assets/img/login/login_background_1.png");
 import enUS from './i18n/en_us';
 import esHN from './i18n/es_hn';
-expandTranslations({
-  'en-US':enUS,
-  'es-HN':esHN
-});
 
 class Login extends Component {
   constructor(props) {
@@ -28,24 +22,27 @@ class Login extends Component {
       password: '',
       active: true
     };
+    expandTranslations({
+      'en-US':enUS,
+      'es-HN':esHN
+    });
   }
 
   componentWillMount() { }
   componentDidMount() { }
 
-  userLogin(e) {
-    this.props.onLogin(this.state.username, this.state.password);
+  getSecretImage(e) {
+    this.props.getSecretImage(this.state.username);
     e.preventDefault();
   }
 
   getCurrentYear(){
     return new Date().getFullYear().toString();
-  }
+  } 
 
-  render() {
-    console.log('image', login_bg);
+  render() { 
+    console.log('________render_props_________',this.props);
     return (
-
       <ImageBackground source={require('../../assets/img/login/login_background_1.png')} style={login_style.backgroundImage}>
 
         <Image
@@ -57,14 +54,10 @@ class Login extends Component {
           <Form style={login_style.form}>
             <Item error>
               <Icon active name='person' style={{ color: '#fff' }} />
-              <Input placeholder={i18n().t('user')}/>
-            </Item>
-            <Item error last>
-              <Icon active name='eye' style={{ color: '#fff' }} />
-              <Input placeholder={i18n().t('password')} />
+              <Input placeholder={i18n().t('user')} value={this.state.username} onChangeText={(username) => this.setState({username: username})} />
             </Item>
             <Button light style={login_style.button}
-              onPress={(e) => this.userLogin(e)} title={this.state.route}
+              onPress={(e) => this.getSecretImage(e)} title={this.state.route}
             >
               <Text style={{ color: '#fff', fontWeight: 'bold' }}>{i18n().t('login')}</Text>
             </Button>
@@ -87,14 +80,12 @@ class Login extends Component {
 } 
 
 const mapStateToProps = (state, ownProps) => {
-  return {
-    isLoggedIn: state.auth.isLoggedIn
-  };
+  return Object.assign({},state.auth);
 }
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onLogin: (username, password) => { dispatch(login(username, password)); }
+    getSecretImage: (username) => { dispatch(secretImage(username)); }
   }
 }
 
