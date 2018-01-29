@@ -4,12 +4,20 @@ import { View, Image, ImageBackground } from "react-native";
 import { Content, Form, Item, Input, Icon, Button, Text, Footer, Header, Fab } from 'native-base';
 import SVGImage from 'react-native-svg-image';
 import { login } from '../../actions/auth';
+
+import { i18n, changeLocale, expandTranslations } from '../../actions/i18n';
+
 import BackgroundImage from '../../components/BackgroundImage/BackgroundImage';
 import login_style from './login_style';
 import login_bg from '../../assets/img/login/login_background_1.png';
 import login_logo from '../../assets/img/login/bancatlan_logos/bancatlan_logo_white.png';
-import i18n from './i18n/i18n';
 //const login_bg = require("../../assets/img/login/login_background_1.png");
+import enUS from './i18n/en_us';
+import esHN from './i18n/es_hn';
+expandTranslations({
+  'en-US':enUS,
+  'es-HN':esHN
+});
 
 class Login extends Component {
   constructor(props) {
@@ -34,15 +42,6 @@ class Login extends Component {
     return new Date().getFullYear().toString();
   }
 
-  changeLocale(){
-    if (i18n.currentLocale() === 'en-US'){
-      i18n.locale = 'es-HN';
-    }else{
-      i18n.locale = 'en-US';
-    }
-    this.forceUpdate();
-  }
-
   render() {
     console.log('image', login_bg);
     return (
@@ -58,20 +57,20 @@ class Login extends Component {
           <Form style={login_style.form}>
             <Item error>
               <Icon active name='person' style={{ color: '#fff' }} />
-              <Input placeholder={i18n.t('user')}/>
+              <Input placeholder={i18n().t('user')}/>
             </Item>
             <Item error last>
               <Icon active name='eye' style={{ color: '#fff' }} />
-              <Input placeholder={i18n.t('password')} />
+              <Input placeholder={i18n().t('password')} />
             </Item>
             <Button light style={login_style.button}
               onPress={(e) => this.userLogin(e)} title={this.state.route}
             >
-              <Text style={{ color: '#fff', fontWeight: 'bold' }}>{i18n.t('login')}</Text>
+              <Text style={{ color: '#fff', fontWeight: 'bold' }}>{i18n().t('login')}</Text>
             </Button>
 
             <Button light style={login_style.button}
-              onPress={(e) => this.changeLocale(e)} title={this.state.route}
+              onPress={(e) => changeLocale(this)} title={this.state.route}
             >
               <Text style={{ color: '#fff', fontWeight: 'bold' }}>Dummy Change Locale</Text>
             </Button>
@@ -85,7 +84,7 @@ class Login extends Component {
 
     );
   }
-}
+} 
 
 const mapStateToProps = (state, ownProps) => {
   return {

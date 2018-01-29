@@ -22,6 +22,7 @@ import { Container } from 'native-base';
 import MainLayout from './app/components/MainLayout/MainLayout';
 import Login from "./app/pages/login/login";
 
+
 const history = createHistory();
 
 const DevTools = createDevTools(
@@ -45,9 +46,6 @@ const store = createStore(
  // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
   composeWithDevTools(applyMiddleware(logger))
 )
-
-
-
 export default class App extends React.Component {
   render() {
     return (
