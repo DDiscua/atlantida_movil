@@ -1,14 +1,38 @@
-export const login = (username, password) => {
-    return {
-        type: 'LOGIN',
-        username: username,
-        password: password
-    };
+import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, LOGOUT_FAIL } from './types';
+
+export const login = (data) => {
+
+    return dispatch => {
+        return axios
+            .post('/api/login', data)
+            .then(
+            (res) => {
+
+                if (res.data.success) {
+                    //**IF RESPONSE OK*
+                    dispatch({
+                        type: LOGIN_SUCCESS,
+                        username: ''
+                    });
+                }
+                return res;
+            },
+            (err) => {
+                dispatch({
+                    type: LOGIN_FAIL,
+                    username: null
+                });
+            }
+            ).catch(error => {
+                console.log(error)
+            });
+    }
+
 };
 
 export const logout = () => {
     return {
-        type: 'LOGOUT'
+        type: LOGOUT_SUCCESS
     };
 };
 

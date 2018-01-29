@@ -1,3 +1,5 @@
+import {LOGIN_SUCCESS,LOGIN_FAIL,LOGOUT_SUCCESS,LOGOUT_FAIL } from '../actions/types';
+
 const defaultState = {
     isLoggedIn: false,
     username: '',
@@ -6,18 +8,26 @@ const defaultState = {
 
 export default function reducer(state = defaultState, action) {
     switch (action.type) {
-        case 'LOGIN':
+        case LOGIN_SUCCESS:
             return Object.assign({}, state, {
                 isLoggedIn: true,
-                username: action.username,
-                password: action.password
+                username: action.username
             });
-        case 'LOGOUT':
+        case LOGIN_FAIL:
+            return Object.assign({}, state, {
+                isLoggedIn: true,
+                username: action.username        
+            });    
+        case LOGOUT_SUCCESS:
             return Object.assign({}, state, {
                 isLoggedIn: false,
-                username: '',
-                password: ''
+                username: null
             });
+        case LOGOUT_FAIL:
+            return Object.assign({}, state, {
+                isLoggedIn: false,
+                username: ''
+            });    
         default:
             return state;
     }
