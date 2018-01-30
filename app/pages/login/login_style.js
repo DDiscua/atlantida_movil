@@ -47,6 +47,11 @@ const login_style = StyleSheet.create({
     Text: {
         alignSelf: 'center',
         alignContent: 'center'
+    },
+    select: {
+        alignSelf: 'center',
+        alignContent: 'center',
+        width:'100%'
     }
 });
 

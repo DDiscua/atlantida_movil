@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Provider } from 'react-redux';
-import { createDevTools } from 'redux-devtools';
+
 import { createStore, applyMiddleware, compose } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import LogMonitor from 'redux-devtools-log-monitor';
+import devToolsEnhancer from 'remote-redux-devtools';
 import routes from "./app/routing/routes";
 import { logger } from 'redux-logger';
-import DockMonitor from 'redux-devtools-dock-monitor';
 import thunkMiddleware from 'redux-thunk';
 import rootReducer from './app/reducers/rootReducer'
 import moment from 'moment';
@@ -25,26 +24,21 @@ import Login from "./app/pages/login/login";
 
 const history = createHistory();
 
-const DevTools = createDevTools(
-  <DockMonitor toggleVisibilityKey="ctrl-ñ"
-    changePositionKey="ctrl-q">
-    <LogMonitor theme="tomorrow" />
-  </DockMonitor>
-)
-
-
 const enhancer = compose(
   // Middleware you want to use in development:
-  applyMiddleware(thunkMiddleware)
-  //DevTools.instrument()
+  composeWithDevTools(
+    applyMiddleware(thunkMiddleware,logger)
+  ),
+
+  // DevTools.instrument()
 )
 
 const store = createStore(
   rootReducer,
   {},
   enhancer,
- // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-  composeWithDevTools(applyMiddleware(logger))
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
+  devToolsEnhancer({ realtime: true, port: 8081 })
 )
 export default class App extends React.Component {
   render() {

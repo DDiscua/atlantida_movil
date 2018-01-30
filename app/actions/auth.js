@@ -1,19 +1,22 @@
-import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, LOGOUT_FAIL, IMAGE_SUCCESS, IMAGE_FAIL  } from './constants/TYPES';
+import { LOGIN_SUCCESS, LOGIN_FAIL, LOGOUT_SUCCESS, LOGOUT_FAIL, IMAGE_SUCCESS, IMAGE_FAIL } from './constants/TYPES';
 import { HTTP_SUCCESS } from './constants/HTTP_CODES';
+import { timeout, headers, endPoints } from '../config/config'
 import axios from 'axios';
+
 let instance = axios.create({
-    baseURL: 'http://200.3.194.103:8080/cb/odata',
+    baseURL: 'http://150.150.70.89:8080/cb/odata',
     timeout: 1000,
     headers: {
         'Content-Type': 'application/json',
-        'Accept':'application/json'   
+        'Accept': 'application/json'
     }
 });
 
 export const secretImage = (username) => {
-    return dispatch => {
+    return (dispatch, getState) => {
+        const { connections } = getState();
         return instance
-            .get('/ns/secretimageservice/SecretImages(UserName=\''+ username +'\')')
+            .get('/ns/secretimageservice/SecretImages(UserName=\'' + username + '\')')
             .then(
             (res) => {
                 let data = res.data.d;
@@ -24,7 +27,7 @@ export const secretImage = (username) => {
                         imageId: data.ImageId,
                         secretPhrase: data.SecretPhrase
                     });
-                }else{
+                } else {
                     dispatch({
                         type: IMAGE_FAIL
                     });
@@ -49,7 +52,7 @@ export const secretImage = (username) => {
 export const login = (data) => {
     return dispatch => {
         return instance
-            .get('/ns/secretimageservice/SecretImages(UserName=\''+ data.username +'\')')
+            .get('/ns/secretimageservice/SecretImages(UserName=\'' + data.username + '\')')
             .then(
             (res) => {
                 console.log(res);
