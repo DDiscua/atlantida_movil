@@ -3,19 +3,20 @@ import { connect } from 'react-redux';
 import { View, Image, ImageBackground } from "react-native";
 import { Content, Form, Item, Input, Icon, Button, Text, Footer, Header, Fab } from 'native-base';
 import { secretImage, login } from '../../actions/auth';
+import { navigate } from '../../actions/navigate';
 import setEndpoint from '../../actions/connections';
 import { i18n, changeLocale, expandTranslations } from '../../actions/i18n';
 import login_style from './login_style';
 import login_bg from '../../assets/img/login/login_background_1.png';
 import login_logo from '../../assets/img/login/bancatlan_logos/bancatlan_logo_white.png';
-//const login_bg = require("../../assets/img/login/login_background_1.png");
+
 import enUS from './i18n/en_us';
 import esHN from './i18n/es_hn';
 import { endPoints } from '../../config/config';
 
 
 const secretWord = 'anl';
-const prompt = Modal.prompt;
+
 
 const endpoints = [{
   label: 'Production',
@@ -26,7 +27,6 @@ const endpoints = [{
   value: 'endPointDevelopment',
 }
 ];
-
 
 
 class Login extends Component {
@@ -46,24 +46,17 @@ class Login extends Component {
     });
     this.onInputChange = this.onInputChange.bind(this);
     this.setEndpoint = this.setEndpoint.bind(this);
-    this.showModal = this.showModal.bind(this);
-    this.onClose = this.onClose.bind(this);
   }
 
-  componentWillMount() { }
-  componentDidMount() { }
 
   getSecretImage(e) {
-
+    e.preventDefault();
     const { username } = this.state;
-
     if (username === secretWord) {
-
       this.showModal('endpoint_modal').bind(this);
     } else {
       this.props.getSecretImage(username);
     }
-    e.preventDefault();
   }
 
   getCurrentYear() {
@@ -89,65 +82,48 @@ class Login extends Component {
     });
   }
 
-  showModal(key) {
-
-    console.log('E', key);
-    this.setState({
-      [key]: true,
-    });
-  }
-
-  onClose(key) {
-    this.setState({
-      [key]: false,
-    });
-  }
-
   render() {
 
-    console.log('________render_props_________', this.props);
+    console.log('________Login_props_________', this.props);
 
     return (
-      <View>
-        <ImageBackground source={require('../../assets/img/login/login_background_1.png')} style={login_style.backgroundImage}>
+      <ImageBackground source={require('../../assets/img/login/login_background_1.png')} style={login_style.backgroundImage}>
 
-          <Image
-            style={{ width: '80%', height: '25%', marginTop: 100 }}
-            source={login_logo}
-          />
+        <Image
+          style={{ width: '80%', height: '25%', marginTop: 100 }}
+          source={login_logo}
+        />
 
-          <Content style={login_style.content}>
-            <Form style={login_style.form}>
-              <Item error>
-                <Icon active name='person' style={{ color: '#fff' }} />
-                <Input
-                  placeholder={i18n().t('user')}
-                  value={this.state.username}
-                  onChangeText={(username) => this.setState({ username: username })}
-                  style={{ color: '#fff' }}
-                />
-              </Item>
-              <Button light style={login_style.button}
-                onPress={(e) => this.getSecretImage(e)} title={this.state.route}
-              >
-                <Text style={{ color: '#fff', fontWeight: 'bold' }}>{i18n().t('login')}</Text>
-              </Button>
+        <Content style={login_style.content}>
+          <Form style={login_style.form}>
+            <Item error>
+              <Icon active name='person' style={{ color: '#fff' }} />
+              <Input
+                placeholder={i18n().t('user')}
+                value={this.state.username}
+                onChangeText={(username) => this.setState({ username: username })}
+                style={{ color: '#fff' }}
+              />
+            </Item>
+            <Button
+              light style={login_style.button}
+              onPress={(e) => this.props.navigate('Home')/*(e) => this.getSecretImage(e)*/}
+              title={this.state.route}
+            >
+              <Text style={{ color: '#fff', fontWeight: 'bold' }}>{i18n().t('login')}</Text>
+            </Button>
 
-              {/*<Button light style={login_style.button}
+            {/*<Button light style={login_style.button}
               onPress={(e) => changeLocale(this)} title={this.state.route}
             >
               <Text style={{ color: '#fff', fontWeight: 'bold' }}>Dummy Change Locale</Text>
             </Button>*/}
-
-            </Form>
-
-          </Content>
-          <Footer style={login_style.footer}>
-            <Text style={{ color: '#fff' }}>© {this.getCurrentYear()} Banco Atlátida S.A. </Text>
-          </Footer>
-        </ImageBackground >
-      </View>
-
+          </Form>
+        </Content>
+        <Footer style={login_style.footer}>
+          <Text style={{ color: '#fff' }}>© {this.getCurrentYear()} Banco Atlátida S.A. </Text>
+        </Footer>
+      </ImageBackground >
     );
   }
 }
@@ -158,8 +134,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getSecretImage: (username) => { dispatch(secretImage(username)); },
-    setEndpoint: (URL) => { dispatch(setEndpoint(URL)); }
+    getSecretImage: (username) => { dispatch(secretImage(username)) },
+    setEndpoint: (URL) => { dispatch(setEndpoint(URL)) },
+    navigate: (PATH) => { dispatch(navigate(PATH)) }
   }
 }
 
