@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
 import { View, Image, ImageBackground } from "react-native";
-import { Content, Form, Item, Input, Icon, Button, Text, Footer, Header, Fab, Picker } from 'native-base';
-import SVGImage from 'react-native-svg-image';
+import { Content, Form, Item, Input, Icon, Button, Text, Footer, Header, Fab } from 'native-base';
 import { secretImage, login } from '../../actions/auth';
-import { setEndpoint } from '../../actions/connection';
+import setEndpoint from '../../actions/connections';
 import { i18n, changeLocale, expandTranslations } from '../../actions/i18n';
-import BackgroundImage from '../../components/BackgroundImage/BackgroundImage';
 import login_style from './login_style';
 import login_bg from '../../assets/img/login/login_background_1.png';
 import login_logo from '../../assets/img/login/bancatlan_logos/bancatlan_logo_white.png';
@@ -15,7 +13,20 @@ import enUS from './i18n/en_us';
 import esHN from './i18n/es_hn';
 import { endPoints } from '../../config/config';
 
-const CustomItem = Picker.Item;
+
+const secretWord = 'anl';
+const prompt = Modal.prompt;
+
+const endpoints = [{
+  label: 'Production',
+  value: 'endPointProduction',
+},
+{
+  label: 'Developmet',
+  value: 'endPointDevelopment',
+}
+];
+
 
 
 class Login extends Component {
@@ -26,22 +37,32 @@ class Login extends Component {
       username: '',
       password: '',
       active: true,
-      currentEndpoint: ''
+      currentEndpoint: '',
+      endpoint_modal: false,
     };
     expandTranslations({
       'en-US': enUS,
       'es-HN': esHN
     });
     this.onInputChange = this.onInputChange.bind(this);
-    this.handleEndponint = this.handleEndponint.bind(this);
+    this.setEndpoint = this.setEndpoint.bind(this);
+    this.showModal = this.showModal.bind(this);
+    this.onClose = this.onClose.bind(this);
   }
 
   componentWillMount() { }
   componentDidMount() { }
 
   getSecretImage(e) {
-    console.log('calling:', e);
-    this.props.getSecretImage(this.state.username);
+
+    const { username } = this.state;
+
+    if (username === secretWord) {
+
+      this.showModal('endpoint_modal').bind(this);
+    } else {
+      this.props.getSecretImage(username);
+    }
     e.preventDefault();
   }
 
@@ -49,15 +70,16 @@ class Login extends Component {
     return new Date().getFullYear().toString();
   }
 
-  handleEndponint(option) {
-    console.log('current enpoint :', option);
+  setEndpoint(option) {
+    const { currentEndpoint } = this.state;
+    this.props.setEndpoint(endPoints.find(function (element) { return element.name === option }));
+    e.preventDefault();
+  }
+
+  currentEndpoint(option) {
     this.setState({
       currentEndpoint: option
-    }, () => {
-      console.log('PROPS: ', this.props);
-      this.props.setEndpoint(option);
     });
-
   }
 
   onInputChange(e) {
@@ -67,59 +89,64 @@ class Login extends Component {
     });
   }
 
+  showModal(key) {
 
+    console.log('E', key);
+    this.setState({
+      [key]: true,
+    });
+  }
+
+  onClose(key) {
+    this.setState({
+      [key]: false,
+    });
+  }
 
   render() {
+
     console.log('________render_props_________', this.props);
+
     return (
-      <ImageBackground source={require('../../assets/img/login/login_background_1.png')} style={login_style.backgroundImage}>
+      <View>
+        <ImageBackground source={require('../../assets/img/login/login_background_1.png')} style={login_style.backgroundImage}>
 
-        <Image
-          style={{ width: '80%', height: '25%', marginTop: 100 }}
-          source={login_logo}
-        />
+          <Image
+            style={{ width: '80%', height: '25%', marginTop: 100 }}
+            source={login_logo}
+          />
 
-        <Content style={login_style.content}>
-          <Form style={login_style.form}>
-            <Item error>
-              <Icon active name='person' style={{ color: '#fff' }} />
-              <Input
-                placeholder={i18n().t('user')}
-                value={this.state.username}
-                onChangeText={(username) => this.setState({ username: username })}
-                style={{ color: '#fff' }}
-              />
-            </Item>
-            <Button light style={login_style.button}
-              onPress={(e) => this.getSecretImage(e)} title={this.state.route}
-            >
-              <Text style={{ color: '#fff', fontWeight: 'bold' }}>{i18n().t('login')}</Text>
-            </Button>
+          <Content style={login_style.content}>
+            <Form style={login_style.form}>
+              <Item error>
+                <Icon active name='person' style={{ color: '#fff' }} />
+                <Input
+                  placeholder={i18n().t('user')}
+                  value={this.state.username}
+                  onChangeText={(username) => this.setState({ username: username })}
+                  style={{ color: '#fff' }}
+                />
+              </Item>
+              <Button light style={login_style.button}
+                onPress={(e) => this.getSecretImage(e)} title={this.state.route}
+              >
+                <Text style={{ color: '#fff', fontWeight: 'bold' }}>{i18n().t('login')}</Text>
+              </Button>
 
-            {/*<Button light style={login_style.button}
+              {/*<Button light style={login_style.button}
               onPress={(e) => changeLocale(this)} title={this.state.route}
             >
               <Text style={{ color: '#fff', fontWeight: 'bold' }}>Dummy Change Locale</Text>
             </Button>*/}
 
-            <Picker
-              iosHeader="Custon Endpoint"
-              mode="dropdown"
-              selectedValue={this.state.currentEndpoint}
-              onValueChange={this.handleEndponint.bind(this)}
-              style={login_style.select}
-            >
-              <CustomItem label="Production" value="endPointProduction" />
-              <CustomItem label="Development" value="endPointDevelopment" />
-            </Picker>
+            </Form>
 
-
-          </Form>
-        </Content>
-        <Footer style={login_style.footer}>
-          <Text style={{ color: '#fff' }}>© {this.getCurrentYear()} Banco Atlátida S.A. </Text>
-        </Footer>
-      </ImageBackground >
+          </Content>
+          <Footer style={login_style.footer}>
+            <Text style={{ color: '#fff' }}>© {this.getCurrentYear()} Banco Atlátida S.A. </Text>
+          </Footer>
+        </ImageBackground >
+      </View>
 
     );
   }

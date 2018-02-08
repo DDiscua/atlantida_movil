@@ -9,13 +9,7 @@ import routes from "./app/routing/routes";
 import { logger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import rootReducer from './app/reducers/rootReducer'
-import moment from 'moment';
-import 'moment/locale/es';
-import {
-  Switch,
-  Route,
-  Router,
-} from 'react-router-native';
+import { addNavigationHelpers } from 'react-navigation';
 import createHistory from 'history/createMemoryHistory';
 import { Container } from 'native-base';
 import MainLayout from './app/components/MainLayout/MainLayout';
@@ -27,7 +21,7 @@ const history = createHistory();
 const enhancer = compose(
   // Middleware you want to use in development:
   composeWithDevTools(
-    applyMiddleware(thunkMiddleware,logger)
+    applyMiddleware(thunkMiddleware, logger)
   ),
 
   // DevTools.instrument()
@@ -43,26 +37,9 @@ const store = createStore(
 export default class App extends React.Component {
   render() {
     return (
-      <Container style={styles.container} className="primary_container">
-        <Provider store={store}>
-          <Router history={history}>
-            <Switch>
-              <Route exact path='/' component={Login} style={{ width: '100%' }} />
-              <MainLayout>
-                {routes.map((route, index) => (
-                  <Route
-                    key={index}
-                    exact={route.exact}
-                    path={route.path}
-                    component={route.component}
-                  />
-                ))}
-              </MainLayout>
-            </Switch>
-          </Router>
-        </Provider>
-      </Container>
+      <Provider store={store}>
 
+      </Provider>
     );
   }
 }
